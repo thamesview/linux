@@ -20,12 +20,86 @@
 #include <asm/smp-ops.h>
 #include <asm/time.h>
 
+#include <linux/moduleparam.h>
+#include <linux/serial_reg.h>
+#include <asm/setup.h>
+#include <asm/io.h>
+
+#define	UART0_IOBASE	0x10030000
+#define	UART1_IOBASE	0x10031000
+#define	UART2_IOBASE	0x10032000
+#define UART_OFF	(0x1000)
+
+static void check_uart(char c);
+
+static volatile u32 *uart_base;
+typedef void (*putchar_f_t)(char);
+
+static putchar_f_t putchar_f = check_uart;
+
+static void putchar(char ch)
+{
+	int timeout = 10000;
+	volatile u32 *base = uart_base;
+
+	/* Wait for fifo to shift out some bytes */
+	while ((base[UART_LSR] & (UART_LSR_THRE | UART_LSR_TEMT))
+	       != (UART_LSR_THRE | UART_LSR_TEMT) && timeout--)
+		;
+	base[UART_TX] = (u8)ch;
+}
+
+static void putchar_dummy(char ch)
+{
+	return;
+}
+
+static void check_uart(char c)
+{
+	/* We Couldn't use ioremap() here */
+	volatile u32 *base = (volatile u32*)CKSEG1ADDR(UART0_IOBASE);
+	int i;
+	for(i=0; i < 3; i++) {
+		if(base[UART_LCR])
+			break;
+		base += (UART_OFF/sizeof(u32));
+	}
+
+	if(i < 3) {
+		uart_base = base;
+		putchar_f = putchar;
+		putchar_f(c);
+	} else {
+		putchar_f = putchar_dummy;
+	}
+}
+
+void print_string(char *str)
+{
+	int i;
+	for(i=0; str[0] != 0; i++)
+	{
+		check_uart(str[i]);
+	}
+}
+
+
+
 static __initconst const void *fdt;
 static __initconst const struct mips_machine *mach;
 static __initconst const void *mach_match_data;
 
 void __init prom_init(void)
 {
+
+    check_uart('T');
+    check_uart('e');
+    check_uart('s');
+	check_uart('t');
+	check_uart('x');
+    check_uart('\n');
+	print_string("T31 Hello from Kernel 6.4-rc3\n");
+
 	plat_get_fdt();
 	BUG_ON(!fdt);
 }
@@ -34,6 +108,14 @@ void __init *plat_get_fdt(void)
 {
 	const struct mips_machine *check_mach;
 	const struct of_device_id *match;
+
+	check_uart('T');
+    check_uart('e');
+    check_uart('s');
+	check_uart('t');
+	check_uart('4');
+    check_uart('\n');
+
 
 	if (fdt)
 		/* Already set up */
@@ -86,6 +168,13 @@ void __init *plat_get_fdt(void)
 
 void __init plat_fdt_relocated(void *new_location)
 {
+	check_uart('T');
+    check_uart('e');
+    check_uart('s');
+	check_uart('t');
+	check_uart('5');
+    check_uart('\n');
+
 	/*
 	 * reset fdt as the cached value would point to the location
 	 * before relocations happened and update the location argument
@@ -101,6 +190,14 @@ void __init plat_fdt_relocated(void *new_location)
 
 void __init plat_mem_setup(void)
 {
+	check_uart('T');
+    check_uart('e');
+    check_uart('s');
+	check_uart('t');
+	check_uart('6');
+    check_uart('\n');
+
+
 	if (mach && mach->fixup_fdt)
 		fdt = mach->fixup_fdt(fdt, mach_match_data);
 
@@ -110,6 +207,14 @@ void __init plat_mem_setup(void)
 
 void __init device_tree_init(void)
 {
+	check_uart('T');
+    check_uart('e');
+    check_uart('s');
+	check_uart('t');
+	check_uart('7');
+    check_uart('\n');
+
+
 	unflatten_and_copy_device_tree();
 	mips_cpc_probe();
 
@@ -126,6 +231,13 @@ int __init apply_mips_fdt_fixups(void *fdt_out, size_t fdt_out_size,
 				 const struct mips_fdt_fixup *fixups)
 {
 	int err;
+
+	check_uart('T');
+    check_uart('e');
+    check_uart('s');
+	check_uart('t');
+	check_uart('8');
+    check_uart('\n');
 
 	err = fdt_open_into(fdt_in, fdt_out, fdt_out_size);
 	if (err) {
@@ -152,6 +264,13 @@ void __init plat_time_init(void)
 {
 	struct device_node *np;
 	struct clk *clk;
+
+	check_uart('T');
+    check_uart('e');
+    check_uart('s');
+	check_uart('t');
+	check_uart('8');
+    check_uart('\n');
 
 	of_clk_init(NULL);
 
@@ -193,6 +312,13 @@ void __init plat_time_init(void)
 void __init arch_init_irq(void)
 {
 	struct device_node *intc_node;
+
+	check_uart('T');
+    check_uart('e');
+    check_uart('s');
+	check_uart('t');
+	check_uart('9');
+    check_uart('\n');
 
 	intc_node = of_find_compatible_node(NULL, NULL,
 					    "mti,cpu-interrupt-controller");

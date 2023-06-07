@@ -9,6 +9,7 @@ config MACH_INGENIC_GENERIC
 	select MACH_JZ4780
 	select MACH_X1000
 	select MACH_X1830
+	select MACH_T31
 
 choice
 	prompt "Machine type"
@@ -43,7 +44,39 @@ config X1830_CU1830_NEO
 	bool "YSH & ATIL CU1830 Module with Neo backplane"
 	select MACH_X1830
 
+config T31_TEACUP
+	bool "T31 Teacup"
+	select MACH_T31
+
 endchoice
+
+config RAW_BOOT
+	bool "Raw Boot Kernel"
+	select BOOT_RAW
+	default n
+
+config EXTAL_CLOCK
+	depends on MACH_XBURST
+	int "extal clock in MHz"
+	default 24
+
+config INGENIC_GPT_CHECK
+	depends on MACH_XBURST
+	bool "The physical space is larger than the virtual space"
+	default y
+
+config SUSPEND_TEST
+	bool "auto suspend test"
+	default n
+
+config SUSPEND_ALARM_TIME
+	int "suspend alarm time(second)"
+	depends on SUSPEND_TEST
+	default 2
+
+config XBURST_MXUV2
+	bool
+	default n
 
 config MACH_JZ4725B
 	bool
@@ -76,3 +109,20 @@ config MACH_X1830
 	select MIPS_CPU_SCACHE
 	select SYS_HAS_CPU_MIPS32_R2
 	select SYS_SUPPORTS_HIGHMEM
+
+config MACH_T31
+	bool
+	select IRQ_INGENIC_CPU
+	select CLK_T31
+	select INGENIC_INTC
+	select PINCTRL
+	select PINCTRL_INGENIC
+	select CLKSRC_OF
+	select CLKDEV_LOOKUP
+	select CLKSRC_INGENIC_SYS_OST
+	select XBURST_MXUV2
+	select MACH_XBURST
+	select MIPS_CPU_SCACHE
+	select SYS_HAS_CPU_MIPS32_R2
+	select SYS_SUPPORTS_HIGHMEM
+	select DT_T31_SWAN
