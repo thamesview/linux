@@ -91,14 +91,8 @@ static __initconst const void *mach_match_data;
 
 void __init prom_init(void)
 {
-
-    check_uart('T');
-    check_uart('e');
-    check_uart('s');
-	check_uart('t');
-	check_uart('x');
-    check_uart('\n');
-	print_string("T31 Hello from Kernel 6.4-rc3\n");
+	print_string("mips init.c prom_init()\n");
+	print_string("T31 Hello from Kernel 6.4-rc5\n");
 
 	plat_get_fdt();
 	BUG_ON(!fdt);
@@ -109,13 +103,7 @@ void __init *plat_get_fdt(void)
 	const struct mips_machine *check_mach;
 	const struct of_device_id *match;
 
-	check_uart('T');
-    check_uart('e');
-    check_uart('s');
-	check_uart('t');
-	check_uart('4');
-    check_uart('\n');
-
+	print_string("mips init.c plat_get_fdt()\n");
 
 	if (fdt)
 		/* Already set up */
@@ -168,12 +156,7 @@ void __init *plat_get_fdt(void)
 
 void __init plat_fdt_relocated(void *new_location)
 {
-	check_uart('T');
-    check_uart('e');
-    check_uart('s');
-	check_uart('t');
-	check_uart('5');
-    check_uart('\n');
+     print_string("mips init.c plat_fdt_relocated()\n");
 
 	/*
 	 * reset fdt as the cached value would point to the location
@@ -190,12 +173,7 @@ void __init plat_fdt_relocated(void *new_location)
 
 void __init plat_mem_setup(void)
 {
-	check_uart('T');
-    check_uart('e');
-    check_uart('s');
-	check_uart('t');
-	check_uart('6');
-    check_uart('\n');
+	print_string("mips init.c plat_mem_setup()\n");
 
 
 	if (mach && mach->fixup_fdt)
@@ -207,13 +185,8 @@ void __init plat_mem_setup(void)
 
 void __init device_tree_init(void)
 {
-	check_uart('T');
-    check_uart('e');
-    check_uart('s');
-	check_uart('t');
-	check_uart('7');
-    check_uart('\n');
 
+	print_string("mips init.c device_tree_init()\n");
 
 	unflatten_and_copy_device_tree();
 	mips_cpc_probe();
@@ -232,12 +205,7 @@ int __init apply_mips_fdt_fixups(void *fdt_out, size_t fdt_out_size,
 {
 	int err;
 
-	check_uart('T');
-    check_uart('e');
-    check_uart('s');
-	check_uart('t');
-	check_uart('8');
-    check_uart('\n');
+	print_string("mips init.c apply_mips_fdt_fixups()\n");
 
 	err = fdt_open_into(fdt_in, fdt_out, fdt_out_size);
 	if (err) {
@@ -265,12 +233,7 @@ void __init plat_time_init(void)
 	struct device_node *np;
 	struct clk *clk;
 
-	check_uart('T');
-    check_uart('e');
-    check_uart('s');
-	check_uart('t');
-	check_uart('8');
-    check_uart('\n');
+	print_string("mips init.c plat_time_init()\n");
 
 	of_clk_init(NULL);
 
@@ -313,12 +276,7 @@ void __init arch_init_irq(void)
 {
 	struct device_node *intc_node;
 
-	check_uart('T');
-    check_uart('e');
-    check_uart('s');
-	check_uart('t');
-	check_uart('9');
-    check_uart('\n');
+	print_string("mips init.c arch_init_irq()\n");
 
 	intc_node = of_find_compatible_node(NULL, NULL,
 					    "mti,cpu-interrupt-controller");

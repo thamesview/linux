@@ -44,8 +44,8 @@ config X1830_CU1830_NEO
 	bool "YSH & ATIL CU1830 Module with Neo backplane"
 	select MACH_X1830
 
-config T31_TEACUP
-	bool "T31 Teacup"
+config T31_OMNIMA
+	bool "T31 Omnima"
 	select MACH_T31
 
 endchoice
