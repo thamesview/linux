@@ -42,6 +42,9 @@ NESTED(except_vec3_generic, 0, sp)
 	.set	pop
 	END(except_vec3_generic)
 
+
+#if 0  /* For some reason the compiler didn't recognise the jr k0 instruction */
+
 /*
  * General exception handler for CPUs with virtual coherency exception.
  *
@@ -101,6 +104,7 @@ handle_vcei:
 	eret
 	.set	pop
 	END(except_vec3_r4000)
+#endif
 
 	__FINIT
 

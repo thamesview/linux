@@ -25,6 +25,10 @@
 #include <asm/setup.h>
 #include <asm/io.h>
 
+extern void super_early_printk(char *str);
+
+/*** Super early printk code 
+
 #define	UART0_IOBASE	0x10030000
 #define	UART1_IOBASE	0x10031000
 #define	UART2_IOBASE	0x10032000
@@ -42,7 +46,7 @@ static void putchar(char ch)
 	int timeout = 10000;
 	volatile u32 *base = uart_base;
 
-	/* Wait for fifo to shift out some bytes */
+	// Wait for fifo to shift out some bytes 
 	while ((base[UART_LSR] & (UART_LSR_THRE | UART_LSR_TEMT))
 	       != (UART_LSR_THRE | UART_LSR_TEMT) && timeout--)
 		;
@@ -56,8 +60,8 @@ static void putchar_dummy(char ch)
 
 static void check_uart(char c)
 {
-	/* We Couldn't use ioremap() here */
-	volatile u32 *base = (volatile u32*)CKSEG1ADDR(UART0_IOBASE);
+	// We Couldn't use ioremap() here
+	volatile u32 *base = (volatile u32*)CKSEG1ADDR(UART1_IOBASE);
 	int i;
 	for(i=0; i < 3; i++) {
 		if(base[UART_LCR])
@@ -74,7 +78,7 @@ static void check_uart(char c)
 	}
 }
 
-void print_string(char *str)
+void super_early_printk(char *str)
 {
 	int i;
 	for(i=0; str[0] != 0; i++)
@@ -83,7 +87,7 @@ void print_string(char *str)
 	}
 }
 
-
+Super early printk code end ***/
 
 static __initconst const void *fdt;
 static __initconst const struct mips_machine *mach;
@@ -91,8 +95,7 @@ static __initconst const void *mach_match_data;
 
 void __init prom_init(void)
 {
-	print_string("mips init.c prom_init()\n");
-	print_string("T31 Hello from Kernel 6.4-rc5\n");
+	super_early_printk("Ingenic SoC Hello from Kernel 6.4-rc3\n");
 
 	plat_get_fdt();
 	BUG_ON(!fdt);
@@ -103,7 +106,7 @@ void __init *plat_get_fdt(void)
 	const struct mips_machine *check_mach;
 	const struct of_device_id *match;
 
-	print_string("mips init.c plat_get_fdt()\n");
+	super_early_printk("plat_get_fdt()\n");
 
 	if (fdt)
 		/* Already set up */
@@ -156,8 +159,8 @@ void __init *plat_get_fdt(void)
 
 void __init plat_fdt_relocated(void *new_location)
 {
-     print_string("mips init.c plat_fdt_relocated()\n");
 
+	super_early_printk("plat_fdt_relocated()\n");
 	/*
 	 * reset fdt as the cached value would point to the location
 	 * before relocations happened and update the location argument
@@ -173,8 +176,7 @@ void __init plat_fdt_relocated(void *new_location)
 
 void __init plat_mem_setup(void)
 {
-	print_string("mips init.c plat_mem_setup()\n");
-
+	super_early_printk("plat_mem_setup()\n");
 
 	if (mach && mach->fixup_fdt)
 		fdt = mach->fixup_fdt(fdt, mach_match_data);
@@ -185,8 +187,7 @@ void __init plat_mem_setup(void)
 
 void __init device_tree_init(void)
 {
-
-	print_string("mips init.c device_tree_init()\n");
+	super_early_printk("device_tree_init()\n");
 
 	unflatten_and_copy_device_tree();
 	mips_cpc_probe();
@@ -205,7 +206,7 @@ int __init apply_mips_fdt_fixups(void *fdt_out, size_t fdt_out_size,
 {
 	int err;
 
-	print_string("mips init.c apply_mips_fdt_fixups()\n");
+	super_early_printk("apply_mips_fdt_fixups()\n");
 
 	err = fdt_open_into(fdt_in, fdt_out, fdt_out_size);
 	if (err) {
@@ -233,7 +234,7 @@ void __init plat_time_init(void)
 	struct device_node *np;
 	struct clk *clk;
 
-	print_string("mips init.c plat_time_init()\n");
+	super_early_printk("plat_time_init()\n");
 
 	of_clk_init(NULL);
 
@@ -276,7 +277,7 @@ void __init arch_init_irq(void)
 {
 	struct device_node *intc_node;
 
-	print_string("mips init.c arch_init_irq()\n");
+	super_early_printk("arch_init_irq()\n");
 
 	intc_node = of_find_compatible_node(NULL, NULL,
 					    "mti,cpu-interrupt-controller");

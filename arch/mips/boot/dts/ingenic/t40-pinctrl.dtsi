@@ -216,11 +216,11 @@
 	};
 
     spi1_pin: spi1_pin {
-	    spi1_pb: spi0-pb {
+	    spi1_pb: spi1-pb {
 		    ingenic,pinmux = <&gpb 25 30>;
 		    ingenic,pinmux-funcsel = <PINCTL_FUNCTION2>;
 	    };
-	    spi1_pc: spi0-pc {
+	    spi1_pc: spi1-pc {
 		    ingenic,pinmux = <&gpc 8 13>;
 		    ingenic,pinmux-funcsel = <PINCTL_FUNCTION2>;
 	    };

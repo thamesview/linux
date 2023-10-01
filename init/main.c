@@ -877,14 +877,22 @@ static void __init print_unknown_bootoptions(void)
 	memblock_free(unknown_options, len);
 }
 
+extern void super_early_printk(char *str);
+
 asmlinkage __visible void __init __no_sanitize_address __noreturn start_kernel(void)
 {
 	char *command_line;
 	char *after_dashes;
 
+	super_early_printk("start_kernel\n");
+
 	set_task_stack_end_magic(&init_task);
+
+	super_early_printk("smp_setup_processor_id\n");
 	smp_setup_processor_id();
+	super_early_printk("debug_objects_early_init\n");
 	debug_objects_early_init();
+	super_early_printk("init_vmlinux_build_id\n");
 	init_vmlinux_build_id();
 
 	cgroup_init_early();
@@ -899,13 +907,24 @@ asmlinkage __visible void __init __no_sanitize_address __noreturn start_kernel(v
 	boot_cpu_init();
 	page_address_init();
 	pr_notice("%s", linux_banner);
+	//super_early_printk("Linux banner: ");
+	super_early_printk(linux_banner);
+	super_early_printk("\n");
+	super_early_printk("early_security_init\n");
 	early_security_init();
+	super_early_printk("setup_arch\n");
 	setup_arch(&command_line);
+	super_early_printk("setup_boot_config\n");
 	setup_boot_config();
+	super_early_printk("setup_command_line\n");
 	setup_command_line(command_line);
+	super_early_printk("setup_nr_cpu_ids\n");
 	setup_nr_cpu_ids();
+	super_early_printk("setup_per_cpu_areas\n");
 	setup_per_cpu_areas();
+	super_early_printk("smp_prepare_boot_cpu\n");
 	smp_prepare_boot_cpu();	/* arch-specific boot-cpu hooks */
+	super_early_printk("boot_cpu_hotplug_init\n");
 	boot_cpu_hotplug_init();
 
 	pr_notice("Kernel command line: %s\n", saved_command_line);

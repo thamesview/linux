@@ -9,7 +9,9 @@ config MACH_INGENIC_GENERIC
 	select MACH_JZ4780
 	select MACH_X1000
 	select MACH_X1830
+	select MACH_X2000
 	select MACH_T31
+	select MACH_T41
 
 choice
 	prompt "Machine type"
@@ -44,9 +46,77 @@ config X1830_CU1830_NEO
 	bool "YSH & ATIL CU1830 Module with Neo backplane"
 	select MACH_X1830
 
+config X1000_NANO_EVB
+	bool "SudoMaker X1000 Nano SoM EVB"
+	select MACH_X1000
+
+config X1000_NANO_EVB_NAND
+	bool "SudoMaker X1000 Nano SoM EVB (NAND flash)"
+	select MACH_X1000
+
+config X1501_PICO_EVB
+	bool "SudoMaker X1501 Pico SoM EVB"
+	select MACH_X1000
+
+config X1000_NOTKIA_V2
+	bool "SudoMaker Notkia V2"
+	select MACH_X1000
+
+config X1501_LOSHARK_L1_V2
+	bool "SudoMaker LoShark L1 V2"
+	select MACH_X1000
+
+config X1501_LOSHARK_L1_V2_2
+	bool "SudoMaker LoShark L1 V2.2"
+	select MACH_X1000
+
+config X1501_LOSHARK_L1_V2_2L
+	bool "SudoMaker LoShark L1 V2.2 Lite"
+	select MACH_X1000
+
+config X1000_INGENIC_JDI_V1
+	bool "Ingenic JDI v1"
+	select MACH_X1000
+
+config X1000_SUDOMAKER_CLE
+	bool "SudoMaker Clé"
+	select MACH_X1000
+
+config X1000_SUDOMAKER_CLE_V2
+	bool "SudoMaker Clé Deux"
+	select MACH_X1000
+
+config X1501_SUDOMAKER_CANBOX
+	bool "SudoMaker CANBOX"
+	select MACH_X1000
+
+config X1501_WIRELESS_TERMINAL
+	bool "SudoMaker Wireless Terminal"
+	select MACH_X1000
+
+config X2000_CU2000_NEO
+	bool "YSH & ATIL CU2000 Module with Neo backplane"
+	select MACH_X2000
+
+config X2000_HALLEY5
+	bool "Ingenic Halley5 Development Board"
+	select MACH_X2000
+
 config T31_OMNIMA
 	bool "T31 Omnima"
+        select MACH_XBURST
 	select MACH_T31
+
+config T40_OMNIMA
+	bool "T41 Omnima"
+	select MACH_XBURST2
+	select MACH_T40
+
+config T41_OMNIMA
+	bool "T41 Omnima"
+	select MACH_XBURST2
+	select MACH_T41
+	select DT_T41_MARMOT
 
 endchoice
 
@@ -94,9 +164,11 @@ config MACH_JZ4770
 
 config MACH_JZ4780
 	bool
+	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
 	select MIPS_CPU_SCACHE
 	select SYS_HAS_CPU_MIPS32_R2
 	select SYS_SUPPORTS_HIGHMEM
+	select SYS_SUPPORTS_SMP
 
 config MACH_X1000
 	bool
@@ -109,6 +181,16 @@ config MACH_X1830
 	select MIPS_CPU_SCACHE
 	select SYS_HAS_CPU_MIPS32_R2
 	select SYS_SUPPORTS_HIGHMEM
+
+config MACH_X2000
+	bool
+	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
+	select SYS_HAS_CPU_MIPS32_R5
+	select SYS_SUPPORTS_HIGHMEM
+	select SYS_SUPPORTS_SMP
+	select MIPS_O32_FP64_SUPPORT
+	select WEAK_ORDERING
+	select WEAK_REORDERING_BEYOND_LLSC
 
 config MACH_T31
 	bool
@@ -126,3 +208,78 @@ config MACH_T31
 	select SYS_HAS_CPU_MIPS32_R2
 	select SYS_SUPPORTS_HIGHMEM
 	select DT_T31_SWAN
+
+config MATCH_T40
+	bool "t40"
+	select IRQ_INGENIC_CPU
+	select CLK_T40
+	select INGENIC_INTC_CHIP
+	select PINCTRL
+	select PINCTRL_INGENIC
+	select CLKSRC_OF
+	select CLKDEV_LOOKUP
+	select CLKSRC_INGENIC_CORE_OST
+	select SOC_T40
+
+config MATCH_T41
+	bool "t41"
+	select IRQ_INGENIC_CPU
+	select CLK_T41
+	select INGENIC_INTC_CHIP
+	select PINCTRL
+	select PINCTRL_INGENIC
+	select CLKSRC_OF
+	select CLKDEV_LOOKUP
+	select CLKSRC_INGENIC_CORE_OST
+	select SOC_T41
+
+config MACH_XBURST
+	bool "Ingenic Xburst based machines"
+	select SYS_HAS_CPU_MIPS32_R1
+	select SYS_HAS_CPU_MIPS32_R2
+	select SYS_HAS_EARLY_PRINTK
+	select MIPS_EXTERNAL_TIMER
+	select HAVE_CLK
+	select SYS_SUPPORTS_HIGHMEM
+	select XBURST_CPU_SCACHE
+	select DMA_INGENIC_HIGHMEM_FLUSH
+	select HAVE_KERNEL_LZMA
+	select IRQ_MIPS_CPU
+	select COMMON_CLK
+	select MIPS_CPU_SCACHE
+
+config MACH_XBURST2
+	bool "Ingenic Xburst2 based machines"
+	select SYS_HAS_CPU_MIPS32_R1
+	select SYS_HAS_CPU_MIPS32_R2
+	select SYS_HAS_EARLY_PRINTK
+	select SYS_SUPPORTS_SMP
+	select SYS_SUPPORTS_HOTPLUG_CPU
+	select MIPS_EXTERNAL_TIMER
+	select HAVE_CLK
+	select SYS_SUPPORTS_HIGHMEM
+	select XBURST2_CPU_SCACHE
+	select DMA_INGENIC_HIGHMEM_FLUSH
+	select SYS_SUPPORTS_ZBOOT
+	select IRQ_MIPS_CPU
+	select MIPS_O32_FP64_SUPPORT
+	select WEAK_ORDERING
+	select WEAK_REORDERING_BEYOND_LLSC
+	select COMMON_CLK
+	select OF_RESERVED_MEM
+	select MIPS_CPU_SCACHE
+
+config INGENIC_BUILTIN_DTB
+	select BUILTIN_DTB
+	depends on MACH_XBURST2
+	bool "Ingenic Device Tree build into Kernel."
+	default y
+
+if SOC_T40
+source "arch/mips/ingenic/xburst2/soc-t40/Kconfig.DT"
+endif
+
+if SOC_T41
+source "arch/mips/ingenic/xburst2/soc-t41/Kconfig.DT"
+endif
+

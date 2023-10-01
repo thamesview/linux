@@ -6,6 +6,11 @@
 
 / {
 	compatible = "ingenic,shark", "ingenic,t40";
+
+	mmc0_pwrseq: mmc0_pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		reset-gpios = <&gpd 22 GPIO_ACTIVE_LOW INGENIC_GPIO_NOBIAS>;
+	};
 };
 
 &uart0 {
@@ -82,9 +87,10 @@
 
 	/* special property */
 	ingenic,wp-gpios = <0>;
-	ingenic,cd-gpios = <&gpb 27 GPIO_ACTIVE_LOW INGENIC_GPIO_NOBIAS>;
+	ingenic,cd-gpios = <&gpc 6 GPIO_ACTIVE_LOW INGENIC_GPIO_NOBIAS>;
 	ingenic,rst-gpios = <0>;
 	pinctrl-0 = <&msc0_pb>;
+	#mmc-pwrseq = <&mmc0_pwrseq>;
 };
 
 &msc1 {
@@ -118,7 +124,7 @@
 &sfc {
 	status = "okay";
     pinctrl-names = "default";
-	ingenic,sfc-max-frequency = <50000000>;
+	ingenic,sfc-max-frequency = <200000000>;
 	ingenic,use_board_info      = /bits/ 8 <0>;
 	ingenic,spiflash_param_offset = <0>;
 	pinctrl-0 = <&sfc_pa>;
@@ -135,6 +141,20 @@
 	ingenic,chnl = <0>;
 	ingenic,allow_cs_same = <1>;
 	ingenic,bus_num = <0>;
+	ingenic,has_dma_support = <1>;
+};
+
+&spi1 {
+	status = "disable";
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi1_pb>;
+
+	spi-max-frequency = <48000000>;
+	num-cs = <2>;
+	cs-gpios = <0>, <0>;
+	ingenic,chnl = <0>;
+	ingenic,allow_cs_same = <1>;
+	ingenic,bus_num = <1>;
 	ingenic,has_dma_support = <1>;
 };
 
@@ -205,6 +225,7 @@
 			pinctrl-names = "default";
 			pinctrl-0 = <&tft_lcd_pd>;
 			ingenic,bl-gpio = <&gpb 25 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
+			status = "okay";
 		};
 
 	};
@@ -225,6 +246,7 @@
 			ingenic,rst-gpio = <&gpd 9 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
 			ingenic,rd-gpio = <&gpd 12 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
 			ingenic,cs-gpio = <&gpd 10 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
+			status = "okay";
 		};
 
 		panel_st7789v240320@0 {
@@ -236,6 +258,7 @@
 			ingenic,rd-gpio = <&gpd 12 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
 			ingenic,cs-gpio = <&gpd 10 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
 			ingenic,bl-gpio = <&gpd 27 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
+			status = "okay";
 		};
 
 	};
@@ -252,12 +275,30 @@
 			compatible = "ingenic,ek79007";
 			ingenic,bl-gpio = <&gpd 26 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
 			// ingenic,rst-gpio = <&gpd 17 GPIO_ACTIVE_LOW INGENIC_GPIO_NOBIAS>;
+			status = "okay";
 		};
 
 		panel_st7703@0 {
 			compatible = "ingenic,st7703";
 			ingenic,bl-gpio = <&gpb 25 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
 			ingenic,rst-gpio = <&gpc 22 GPIO_ACTIVE_LOW INGENIC_GPIO_NOBIAS>;
+			status = "okay";
+		};
+
+		panel_ma0060@0 {
+			compatible = "ingenic,ma0060";
+			ingenic,vdd-en-gpio = <&gpd 22 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
+			ingenic,rst-gpio = <&gpd 23 GPIO_ACTIVE_LOW INGENIC_GPIO_NOBIAS>;
+			ingenic,lcd-pwm-gpio = <&gpd 25 GPIO_ACTIVE_LOW INGENIC_GPIO_NOBIAS>;
+			status = "okay";
+		};
+
+		panel_MTF070@0 {
+			compatible = "ingenic,mtf070";
+			status = "okay";
+			ingenic,bl-gpio = <&gpc 4 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
+			ingenic,rst-gpio = <&gpb 28 GPIO_ACTIVE_LOW INGENIC_GPIO_NOBIAS>;
+			ingenic,pw-gpio = <&gpb 29 GPIO_ACTIVE_HIGH INGENIC_GPIO_NOBIAS>;
 		};
 	};
 

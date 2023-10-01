@@ -33,6 +33,8 @@
 
 #include <asm/mach-loongson64/cpucfg-emul.h>
 
+extern void super_early_printk(char *str);
+
 /* Hardware capabilities */
 unsigned int elf_hwcap __read_mostly;
 EXPORT_SYMBOL_GPL(elf_hwcap);
@@ -1754,6 +1756,9 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
 	 */
 	decode_config3(c);
 
+    super_early_printk("###Decoded cpu id");
+
+
 	/* XBurst does not implement the CP0 counter. */
 	c->options &= ~MIPS_CPU_COUNTER;
 	BUG_ON(__builtin_constant_p(cpu_has_counter) && cpu_has_counter);
@@ -1815,15 +1820,25 @@ static inline void cpu_probe_ingenic(struct cpuinfo_mips *c, unsigned int cpu)
 		c->writecombine = _CACHE_CACHABLE_WA;
 		c->cputype = CPU_XBURST;
 		__cpu_name[cpu] = "Ingenic XBurst";
+		super_early_printk("###It's Ingenic XBurst");
 		break;
 
 	/* XBurst®2 with MXU2.1 SIMD ISA */
 	case PRID_IMP_XBURST2:
 		c->cputype = CPU_XBURST;
 		__cpu_name[cpu] = "Ingenic XBurst II";
+		super_early_printk("###It's Ingenic XBurst2");
 		break;
 
+	case PRID_IMP_XBURST2_REV2:
+		c->cputype = CPU_XBURST;
+		__cpu_name[cpu] = "Ingenic XBurst II Rev2 T41";
+		super_early_printk("###It's Ingenic XBurst2 T41");
+		break;
+
+
 	default:
+		super_early_printk("###Unknown Ingenic Processor ID!");
 		panic("Unknown Ingenic Processor ID!");
 		break;
 	}
@@ -1841,6 +1856,7 @@ const char *__elf_base_platform;
 
 void cpu_probe(void)
 {
+	char buf[512];
 	struct cpuinfo_mips *c = &current_cpu_data;
 	unsigned int cpu = smp_processor_id();
 
@@ -1859,6 +1875,10 @@ void cpu_probe(void)
 	c->fpu_msk31	= FPU_CSR_RSVD | FPU_CSR_ABS2008 | FPU_CSR_NAN2008;
 
 	c->processor_id = read_c0_prid();
+
+	snprintf(buf, sizeof(buf), "####Processor ID is %d\n", c->processor_id);
+	super_early_printk(buf);
+
 	switch (c->processor_id & PRID_COMP_MASK) {
 	case PRID_COMP_LEGACY:
 		cpu_probe_legacy(c, cpu);
@@ -1892,6 +1912,7 @@ void cpu_probe(void)
 	case PRID_COMP_INGENIC_D0:
 	case PRID_COMP_INGENIC_D1:
 	case PRID_COMP_INGENIC_E1:
+		super_early_printk("Ingenic CPU detected");
 		cpu_probe_ingenic(c, cpu);
 		break;
 	}

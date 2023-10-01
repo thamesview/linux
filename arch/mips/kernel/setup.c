@@ -776,16 +776,24 @@ static void __init setup_rng_seed(void)
 	memzero_explicit(rng_seed_hex, len * 2);
 }
 
+extern void super_early_printk(char *str);
+
 void __init setup_arch(char **cmdline_p)
 {
+	super_early_printk("cpu_probe()\n");
 	cpu_probe();
+	super_early_printk("mips_cm_probe()\n");
 	mips_cm_probe();
+	super_early_printk("mips_cm_probe()\n");
 	prom_init();
 
+	super_early_printk("setup_early_fdc_console()\n");
 	setup_early_fdc_console();
 #ifdef CONFIG_EARLY_PRINTK
+	super_early_printk("setup_early_printk()\n");
 	setup_early_printk();
 #endif
+	super_early_printk("cpu_report()\n");
 	cpu_report();
 	if (IS_ENABLED(CONFIG_CPU_R4X00_BUGS64))
 		check_bugs64_early();
@@ -796,18 +804,27 @@ void __init setup_arch(char **cmdline_p)
 #endif
 #endif
 
+	super_early_printk("arch_mem_init()\n");
 	arch_mem_init(cmdline_p);
+	super_early_printk("dmi_setup()\n");
 	dmi_setup();
 
+	super_early_printk("resource_init()\n");
 	resource_init();
+	super_early_printk("plat_smp_setup()\n");
 	plat_smp_setup();
+	super_early_printk("prefill_possible_map()\n");
 	prefill_possible_map();
 
+	super_early_printk("cpu_cache_init()\n");
 	cpu_cache_init();
+	super_early_printk("paging_init()\n");
 	paging_init();
 
+	super_early_printk("memblock_dump_all()\n");
 	memblock_dump_all();
 
+	super_early_printk("setup_rng_seed()\n");
 	setup_rng_seed();
 }
 

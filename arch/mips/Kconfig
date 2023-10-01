@@ -116,12 +116,12 @@ config MACH_INGENIC
 	select IRQ_MIPS_CPU
 	select PINCTRL
 	select GPIOLIB
+	select ARCH_REQUIRE_GPIOLIB
 	select COMMON_CLK
 	select GENERIC_IRQ_CHIP
-	select BUILTIN_DTB if MIPS_NO_APPENDED_DTB
+	select BUILTIN_DTB
 	select USE_OF
-	select CPU_SUPPORTS_CPUFREQ
-	select MIPS_EXTERNAL_TIMER
+	select LIBFDT
 
 menu "Machine selection"
 
@@ -432,8 +432,6 @@ config MACH_INGENIC_SOC
 	select MIPS_GENERIC
 	select MACH_INGENIC
 	select SYS_SUPPORTS_ZBOOT_UART16550
-	select CPU_SUPPORTS_CPUFREQ
-	select MIPS_EXTERNAL_TIMER
 
 config LANTIQ
 	bool "Lantiq based platforms"

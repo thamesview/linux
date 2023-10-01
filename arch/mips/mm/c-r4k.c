@@ -1545,6 +1545,10 @@ static void setup_scache(void)
 		/* don't need to worry about L2, fully coherent */
 		return;
 
+	case CPU_XBURST2:
+		mips_sc_init(); /* could do the same for CPU_XBURST? */
+		return;
+
 	default:
 		if (c->isa_level & (MIPS_CPU_ISA_M32R1 | MIPS_CPU_ISA_M64R1 |
 				    MIPS_CPU_ISA_M32R2 | MIPS_CPU_ISA_M64R2 |
