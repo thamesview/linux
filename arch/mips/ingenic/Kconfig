@@ -108,7 +108,7 @@ config T31_OMNIMA
 	select MACH_T31
 
 config T40_OMNIMA
-	bool "T41 Omnima"
+	bool "T40 Omnima"
 	select MACH_XBURST2
 	select MACH_T40
 
@@ -209,8 +209,8 @@ config MACH_T31
 	select SYS_SUPPORTS_HIGHMEM
 	select DT_T31_SWAN
 
-config MATCH_T40
-	bool "t40"
+config MACH_T40
+	bool
 	select IRQ_INGENIC_CPU
 	select CLK_T40
 	select INGENIC_INTC_CHIP
@@ -221,8 +221,8 @@ config MATCH_T40
 	select CLKSRC_INGENIC_CORE_OST
 	select SOC_T40
 
-config MATCH_T41
-	bool "t41"
+config MACH_T41
+	bool
 	select IRQ_INGENIC_CPU
 	select CLK_T41
 	select INGENIC_INTC_CHIP
@@ -234,7 +234,7 @@ config MATCH_T41
 	select SOC_T41
 
 config MACH_XBURST
-	bool "Ingenic Xburst based machines"
+	bool
 	select SYS_HAS_CPU_MIPS32_R1
 	select SYS_HAS_CPU_MIPS32_R2
 	select SYS_HAS_EARLY_PRINTK
@@ -249,7 +249,7 @@ config MACH_XBURST
 	select MIPS_CPU_SCACHE
 
 config MACH_XBURST2
-	bool "Ingenic Xburst2 based machines"
+	bool
 	select SYS_HAS_CPU_MIPS32_R1
 	select SYS_HAS_CPU_MIPS32_R2
 	select SYS_HAS_EARLY_PRINTK

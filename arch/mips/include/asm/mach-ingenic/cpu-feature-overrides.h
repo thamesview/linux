@@ -7,7 +7,7 @@
 #ifndef __ASM_MACH_CPU_FEATURE_OVERRIDES_H
 #define __ASM_MACH_CPU_FEATURE_OVERRIDES_H
 
-#ifdef CONFIG_MATCH_T41
+#ifdef CONFIG_MACH_T41
 
 #define cpu_dcache_size()       	(32 * 1024)
 #define cpu_dcache_ways()       	8

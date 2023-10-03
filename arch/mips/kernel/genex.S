@@ -42,15 +42,13 @@ NESTED(except_vec3_generic, 0, sp)
 	.set	pop
 	END(except_vec3_generic)
 
-
-#if 0  /* For some reason the compiler didn't recognise the jr k0 instruction */
-
 /*
  * General exception handler for CPUs with virtual coherency exception.
  *
  * Be careful when changing this, it has to be at most 256 (as a special
  * exception) bytes to fit into space reserved for the exception handler.
  */
+#if cpu_has_vce == 1
 NESTED(except_vec3_r4000, 0, sp)
 	.set	push
 	.set	arch=r4000
@@ -70,7 +68,6 @@ NESTED(except_vec3_r4000, 0, sp)
 	.set	pop
 	PTR_L	k0, exception_handlers(k1)
 	jr	k0
-
 	/*
 	 * Big shit, we now may have two dirty primary cache lines for the same
 	 * physical address.  We can safely invalidate the line pointed to by
@@ -105,7 +102,6 @@ handle_vcei:
 	.set	pop
 	END(except_vec3_r4000)
 #endif
-
 	__FINIT
 
 	.align	5	/* 32 byte rollback region */

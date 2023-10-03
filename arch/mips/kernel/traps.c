@@ -2353,7 +2353,9 @@ void __init trap_init(void)
 {
 	extern char except_vec3_generic;
 	extern char except_vec4;
+#if cpu_has_vce == 1
 	extern char except_vec3_r4000;
+#endif
 	unsigned long i, vec_size;
 	phys_addr_t ebase_pa;
 
@@ -2517,10 +2519,13 @@ void __init trap_init(void)
 	if (board_cache_error_setup)
 		board_cache_error_setup();
 
+#if cpu_has_vce == 1
 	if (cpu_has_vce)
 		/* Special exception: R4[04]00 uses also the divec space. */
 		set_handler(0x180, &except_vec3_r4000, 0x100);
-	else if (cpu_has_4kex)
+	else
+#endif
+	if (cpu_has_4kex)
 		set_handler(0x180, &except_vec3_generic, 0x80);
 	else
 		set_handler(0x080, &except_vec3_generic, 0x80);

@@ -62,9 +62,11 @@ void setup_zero_pages(void)
 	unsigned int order, i;
 	struct page *page;
 
+#if cpu_has_vce == 1
 	if (cpu_has_vce)
 		order = 3;
 	else
+#endif
 		order = 0;
 
 	empty_zero_page = __get_free_pages(GFP_KERNEL | __GFP_ZERO, order);
